@@ -56,7 +56,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return postDao;
     }
 
-    public RuntimeExceptionDao<Comment,Integer> getCategoryRuntimeDao () {
+    public RuntimeExceptionDao<Comment,Integer> getCommentDao () {
         if(commentDao == null){
             commentDao = getRuntimeExceptionDao(Comment.class);
         }

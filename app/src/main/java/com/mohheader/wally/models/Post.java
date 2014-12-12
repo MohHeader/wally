@@ -7,8 +7,10 @@ import com.j256.ormlite.table.DatabaseTable;
 
 import org.joda.time.DateTime;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by thedreamer on 12/12/14.
@@ -30,7 +32,7 @@ public class Post {
     private DateTime timestamp;
 
     @ForeignCollectionField
-    Collection<Comment> comments;
+    Collection<Comment> comments = new ArrayList<Comment>();
 
     public String getUserName() {
         return user_name;
@@ -53,5 +55,9 @@ public class Post {
 
     public void setTimestamp(DateTime timestamp) {
         this.timestamp = timestamp;
+    }
+
+    public Collection<Comment> getComments() {
+        return comments;
     }
 }

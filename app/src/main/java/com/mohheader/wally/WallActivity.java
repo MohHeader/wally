@@ -42,7 +42,7 @@ public class WallActivity extends ListActivity {
                 String text = ((EditText)addPostView.findViewById(R.id.post_input)).getText().toString();
                 Post post = new Post();
                 post.setText(text);
-                post.setUserName("Ahmed");
+                post.setUserName("Ahmed"); //TODO: Make the User Login/Logout !
                 post.setTimestamp(new DateTime());
                 postDao.create(post);
                 posts.add(post);
