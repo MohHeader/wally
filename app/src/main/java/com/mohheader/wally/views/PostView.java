@@ -66,6 +66,7 @@ public class PostView extends LinearLayout {
             @Override
             public void onClick(View view) {
                 String text = commentInput.getText().toString();
+                commentInput.setText("");
                 Comment comment = new Comment();
                 comment.setPost(post);
                 comment.setText(text);
