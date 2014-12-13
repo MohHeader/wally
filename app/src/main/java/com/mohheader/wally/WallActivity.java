@@ -1,5 +1,6 @@
 package com.mohheader.wally;
 
+import android.app.Activity;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
@@ -10,8 +11,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
@@ -27,16 +30,21 @@ import java.util.Date;
 import java.util.List;
 
 
-public class WallActivity extends ListActivity {
+public class WallActivity extends Activity {
     List<Post> posts;
     RuntimeExceptionDao<Post,Integer> postDao;
+    ListView listView;
+    PostsAdapter adapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_wall);
+        listView = (ListView) findViewById(R.id.list_view);
         LayoutInflater inflater = getLayoutInflater();
         ViewGroup addPostView = (ViewGroup)inflater.inflate(R.layout.add_post_view, null);
         final EditText postInput = (EditText) addPostView.findViewById(R.id.post_input);
-        getListView().addHeaderView(addPostView);
+        listView.addHeaderView(addPostView);
+        listView.setDescendantFocusability(ViewGroup.FOCUS_BEFORE_DESCENDANTS);
 
         DatabaseHelper dbHelper = OpenHelperManager.getHelper(getApplicationContext(), DatabaseHelper.class);
         postDao = dbHelper.getPostDao();
@@ -47,7 +55,8 @@ public class WallActivity extends ListActivity {
             posts = postDao.queryForAll();
             e.printStackTrace();
         }
-        setListAdapter(new PostsAdapter(this,posts));
+        adapter = new PostsAdapter(this,posts);
+        listView.setAdapter(adapter);
 
         addPostView.findViewById(R.id.add_post).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,8 +68,17 @@ public class WallActivity extends ListActivity {
                 post.setUserName(User.getUserName(WallActivity.this));
                 post.setTimestamp(new DateTime());
                 postDao.create(post);
-                posts.add(0,post);
-                getListView().invalidateViews();
+                posts.add(0, post);
+                adapter = null;
+                adapter = new PostsAdapter(WallActivity.this,posts);
+                adapter.notifyDataSetChanged();
+                listView.setAdapter(adapter);
+
+                postInput.clearFocus();
+                InputMethodManager imm = (InputMethodManager)getSystemService(
+                        Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(postInput.getWindowToken(), 0);
+
             }
         });
     }

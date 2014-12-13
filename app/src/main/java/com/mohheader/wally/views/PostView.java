@@ -2,7 +2,10 @@ package com.mohheader.wally.views;
 
 import android.app.Activity;
 import android.content.Context;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
@@ -66,8 +70,9 @@ public class PostView extends LinearLayout {
         this.commentInput.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                if (i == EditorInfo.IME_NULL
-                        && keyEvent.getAction() == KeyEvent.ACTION_DOWN) {
+                if (keyEvent != null && keyEvent.getAction() != KeyEvent.ACTION_DOWN)
+                    return false;
+                if (i == EditorInfo.IME_ACTION_DONE) {
                     addCommentToPost(commentInput.getText().toString());
                     return true;
                 }
@@ -75,17 +80,16 @@ public class PostView extends LinearLayout {
             }
         });
 
-//        this.commentInput.setOnKeyListener(new OnKeyListener() {
-//            public boolean onKey(View v, int keyCode, KeyEvent event) {
-//                // If the event is a key-down event on the "enter" button
-//                if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
-//                        (keyCode == KeyEvent.KEYCODE_ENTER)) {
-//                    addCommentToPost(commentInput.getText().toString());
-//                    return true;
-//                }
-//                return true;
-//            }
-//        });
+        this.commentInput.setOnKeyListener(new OnKeyListener() {
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
+                        (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                    addCommentToPost(commentInput.getText().toString());
+                    return true;
+                }
+                return false;
+            }
+        });
     }
 
     private void addCommentToPost(String text) {

@@ -21,7 +21,8 @@
             android:layout_height="wrap_content"
             android:id="@+id/login_name"
             android:hint="Your Name"
-            android:singleLine="true"/>
+            android:singleLine="true"
+            android:inputType="textCapWords"/>
 
         <Button
             android:layout_width="wrap_content"
