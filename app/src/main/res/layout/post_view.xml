@@ -6,12 +6,13 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Ahmed wrote :"/>
+        android:id="@+id/name"/>
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/post_text"/>
     <LinearLayout
+        android:background="#ccc"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -25,14 +26,6 @@
         android:hint="Reply ?!"
         android:inputType="textCapSentences|textMultiLine"
         android:maxLength="2000"
-        android:maxLines="4"/>
-
-    <Button
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:text="Reply"
-        android:id="@+id/add_comment"
-        android:layout_weight="1"
-        android:layout_gravity="bottom|end"
-        android:gravity="center"/>
+        android:maxLines="4"
+        android:imeOptions="actionDone" />
 </LinearLayout>

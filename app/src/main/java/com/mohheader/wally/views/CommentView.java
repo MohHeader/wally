@@ -36,6 +36,6 @@ public class CommentView extends LinearLayout {
     }
 
     public void setComment(Comment comment) {
-        commentText.setText(comment.getText());
+        commentText.setText(comment.getUserName() + " : " + comment.getText());
     }
 }

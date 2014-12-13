@@ -1,6 +1,9 @@
 package com.mohheader.wally;
 
 import android.app.ListActivity;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -15,6 +18,7 @@ import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.mohheader.wally.adapters.PostsAdapter;
 import com.mohheader.wally.models.DatabaseHelper;
 import com.mohheader.wally.models.Post;
+import com.mohheader.wally.models.User;
 
 import org.joda.time.DateTime;
 
@@ -36,10 +40,11 @@ public class WallActivity extends ListActivity {
 
         DatabaseHelper dbHelper = OpenHelperManager.getHelper(getApplicationContext(), DatabaseHelper.class);
         postDao = dbHelper.getPostDao();
-//        posts = postDao.queryForAll();
+
         try {
             posts = postDao.queryBuilder().orderBy("id",false).query();
         } catch (SQLException e) {
+            posts = postDao.queryForAll();
             e.printStackTrace();
         }
         setListAdapter(new PostsAdapter(this,posts));
@@ -51,7 +56,7 @@ public class WallActivity extends ListActivity {
                 postInput.setText("");
                 Post post = new Post();
                 post.setText(text);
-                post.setUserName("Ahmed"); //TODO: Make the User Login/Logout !
+                post.setUserName(User.getUserName(WallActivity.this));
                 post.setTimestamp(new DateTime());
                 postDao.create(post);
                 posts.add(0,post);
@@ -77,7 +82,11 @@ public class WallActivity extends ListActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_logout) {
-            return true;
+            User.logout(this);
+
+            Intent i = new Intent(WallActivity.this, LoginActivity.class);
+            startActivity(i);
+            finish();
         }
 
         return super.onOptionsItemSelected(item);
