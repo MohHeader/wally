@@ -1,5 +1,7 @@
 package com.mohheader.wally.models;
 
+import android.content.Context;
+
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
@@ -14,6 +16,14 @@ import java.util.Date;
 
 @DatabaseTable(tableName = "comments")
 public class Comment {
+
+    public Comment(){};
+    public Comment(Post post, String text, Context ctx){
+        this.setPost(post);
+        this.setText(text);
+        this.setUserName(User.getUserName(ctx));
+        this.setTimestamp(new DateTime());
+    }
     @DatabaseField(generatedId = true, canBeNull = false,unique=true)
     private int id;
 

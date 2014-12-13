@@ -1,5 +1,7 @@
 package com.mohheader.wally.models;
 
+import android.content.Context;
+
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
@@ -9,8 +11,6 @@ import org.joda.time.DateTime;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
-import java.util.List;
 
 /**
  * Created by thedreamer on 12/12/14.
@@ -18,7 +18,12 @@ import java.util.List;
 @DatabaseTable(tableName = "posts")
 public class Post {
 
-    public Post(){}
+    public Post(){};
+    public Post(String text, Context ctx){
+        this.setText(text);
+        this.setUserName(User.getUserName(ctx));
+        this.setTimestamp(new DateTime());
+    }
     @DatabaseField(generatedId = true, canBeNull = false,unique=true)
     private int id;
 

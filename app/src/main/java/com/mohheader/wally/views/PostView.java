@@ -2,29 +2,22 @@ package com.mohheader.wally.views;
 
 import android.app.Activity;
 import android.content.Context;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.mohheader.wally.R;
+import com.mohheader.wally.helpers.KeyboardHelper;
 import com.mohheader.wally.models.Comment;
 import com.mohheader.wally.models.DatabaseHelper;
 import com.mohheader.wally.models.Post;
-import com.mohheader.wally.models.User;
-
-import org.joda.time.DateTime;
 
 import java.util.Collection;
 
@@ -34,7 +27,6 @@ import java.util.Collection;
 public class PostView extends LinearLayout {
     TextView postText, name;
     LinearLayout commentsContainer;
-    Button addComment;
     EditText commentInput;
 
     Post post;
@@ -93,14 +85,11 @@ public class PostView extends LinearLayout {
     }
 
     private void addCommentToPost(String text) {
-        Comment comment = new Comment();
-        comment.setPost(post);
-        comment.setText(text);
-        comment.setUserName(User.getUserName(getContext()));
-        comment.setTimestamp(new DateTime());
+        Comment comment = new Comment(post,text, getContext());
         commentDao.create(comment);
         addCommentToView(comment);
         commentInput.getText().clear();
+        KeyboardHelper.hideKeyboard(getContext());
     }
 
     public void setPost(Post _post){

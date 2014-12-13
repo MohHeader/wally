@@ -19,6 +19,7 @@ import android.widget.ListView;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.mohheader.wally.adapters.PostsAdapter;
+import com.mohheader.wally.helpers.KeyboardHelper;
 import com.mohheader.wally.models.DatabaseHelper;
 import com.mohheader.wally.models.Post;
 import com.mohheader.wally.models.User;
@@ -39,7 +40,9 @@ public class WallActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wall);
+
         listView = (ListView) findViewById(R.id.list_view);
+
         LayoutInflater inflater = getLayoutInflater();
         ViewGroup addPostView = (ViewGroup)inflater.inflate(R.layout.add_post_view, null);
         final EditText postInput = (EditText) addPostView.findViewById(R.id.post_input);
@@ -63,22 +66,16 @@ public class WallActivity extends Activity {
             public void onClick(View view) {
                 String text = postInput.getText().toString();
                 postInput.setText("");
-                Post post = new Post();
-                post.setText(text);
-                post.setUserName(User.getUserName(WallActivity.this));
-                post.setTimestamp(new DateTime());
+                Post post = new Post(text, WallActivity.this);
                 postDao.create(post);
                 posts.add(0, post);
+
                 adapter = null;
                 adapter = new PostsAdapter(WallActivity.this,posts);
                 adapter.notifyDataSetChanged();
                 listView.setAdapter(adapter);
 
-                postInput.clearFocus();
-                InputMethodManager imm = (InputMethodManager)getSystemService(
-                        Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(postInput.getWindowToken(), 0);
-
+                KeyboardHelper.hideKeyboard(WallActivity.this);
             }
         });
     }
